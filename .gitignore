@@ -1,0 +1,8 @@
+/flowers
+/data_test
+/data_train
+/data_validate
+/*.zip
+/saved_models/simple_bench_ResNet50
+/logs
+
