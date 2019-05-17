@@ -12,6 +12,8 @@ from PIL import Image
 
 import tsne # Import the tsne file
 import pylab
+# Similar to visualization to tsne, but is faster
+import umap
 
 # Directory of the data
 base_dir = os.path.join("./flowers")
@@ -105,13 +107,55 @@ def runPCA():
     print("Running PCA")
 
 def runUMAP():
-    print("Running UMAP")
+    size = 200
+    name_dict = {}
+    labels = np.array([])
+    images = np.array([]).reshape(0,size*size*3) # 3 for the colour channels
+    i = 0
+    for dir in os.listdir(base_dir): # this is one row
+        j = 0
+        dirPath = os.path.join(base_dir, dir)
+        name_dict[i] = dir
+        for imgName in os.listdir(dirPath): # the columns
+            if j >= 100: # Only use 100 images
+                break
+            img = Image.open(os.path.join(dirPath, imgName))
+            img = img.resize((size,size), Image.ANTIALIAS)
+            np_img = np.array(img)
+            np_img = np_img.reshape(1,-1)
+
+            # labels = np.append(labels,dir)
+            labels = np.append(labels,i)
+            images = np.concatenate((images, np_img))
+            j += 1
+        i += 1
+
+    print("Running UMAP on " + str(len(labels)) + " data points")
+
+    reducer = umap.UMAP(
+        n_neighbors=10,
+        min_dist=0.05,
+        metric='correlation')
+    reducer.fit(images)
+    embedding = reducer.transform(images)
+    print(embedding.shape)
+
+    # Create plot
+    plt.scatter(embedding[:, 0], embedding[:, 1], c=labels, cmap='Spectral')#, s=5)
+    plt.gca().set_aspect('equal', 'datalim')
+    plt.colorbar(boundaries=np.arange(i+1)-0.5).set_ticks(np.arange(i+1))
+    plt.show()
+
+
+
+
 
 
 def main():
     # plotDistribution()
     # showImages()
     # runTsne()
+    runUMAP()
 
 main()
 
