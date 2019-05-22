@@ -134,7 +134,7 @@ def runUMAP():
 
     reducer = umap.UMAP(
         n_neighbors=10,
-        min_dist=0.05,
+        min_dist=0.1,
         metric='correlation')
     reducer.fit(images)
     embedding = reducer.transform(images)

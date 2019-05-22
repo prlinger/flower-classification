@@ -1,0 +1,4 @@
+
+The simple_bench_ResNet50 benchmark achieves 85% accuracy over 24 epochs.
+
+The highend_bench_InceptionResNetV2 benchmark achieves 75% accuracy over 16 epochs.
